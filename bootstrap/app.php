@@ -14,6 +14,9 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->statefulApi();
 
+        // Percayai proxy HTTPS dari Vercel
+        $middleware->trustProxies(at: '*');
+
         // Tamu yang membuka halaman terlindungi -> login; user yang sudah login
         // dan membuka login/register (middleware guest) -> dashboard sesuai role.
         $middleware->redirectGuestsTo(fn () => route('login'));
