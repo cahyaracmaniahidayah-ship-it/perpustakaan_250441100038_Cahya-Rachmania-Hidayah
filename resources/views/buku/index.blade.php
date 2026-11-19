@@ -101,7 +101,7 @@
     </table>
 
     <script>
-    const apiUrl = '{{ url('/api/buku') }}';
+    const webBukuUrl = '{{ url('/buku') }}';
 
     const formBuku = document.getElementById('form-buku');
     if (formBuku) {
@@ -118,7 +118,7 @@
             };
 
             const method = id ? 'PUT' : 'POST';
-            const url = id ? `${apiUrl}/${id}` : apiUrl;
+            const url = id ? `${webBukuUrl}/${id}` : webBukuUrl;
 
             try {
                 const response = await fetch(url, {

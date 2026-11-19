@@ -11,8 +11,9 @@ use App\Http\Controllers\PenggunaController;
 use App\Http\Controllers\PetugasDashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RiwayatController;
+use App\Models\Buku;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
 
 Route::get('/', function () {
     return view('beranda');
@@ -46,9 +47,40 @@ Route::middleware('auth')->group(function () {
         // Halaman form tambah = halaman daftar yang sama (form ada di atas tabel)
         Route::get('/buku/create', [BukuPageController::class, 'index'])->name('buku.create');
 
+        Route::post('/buku', function (Request $request) {
+            $validated = $request->validate([
+                'kategori_id' => 'required|integer',
+                'judul' => 'required|string|max:255',
+                'penulis' => 'required|string|max:255',
+                'tahun_terbit' => 'required|integer|min:1901|max:2026',
+            ]);
+
+            Buku::create($validated);
+
+            return response()->json([
+                'message' => 'Buku berhasil ditambahkan.',
+            ], 201);
+        })->name('buku.store');
+
+        Route::put('/buku/{buku}', function (Request $request, $buku) {
+            $dataBuku = Buku::findOrFail($buku);
+
+            $validated = $request->validate([
+                'kategori_id' => 'required|integer',
+                'judul' => 'required|string|max:255',
+                'penulis' => 'required|string|max:255',
+                'tahun_terbit' => 'required|integer|min:1901|max:2026',
+            ]);
+
+            $dataBuku->update($validated);
+
+            return response()->json([
+                'message' => 'Buku berhasil diubah.',
+            ], 200);
+        })->whereNumber('buku')->name('buku.update');
+
         Route::delete('/buku/{buku}', [BukuController::class, 'destroy'])
             ->whereNumber('buku')->name('buku.destroy');
-
     });
 
     // [A2] route pencarian (rentan/amannya ada di BukuPageController::cari)
@@ -88,8 +120,8 @@ Route::middleware('auth')->group(function () {
         ->middleware('permission:lihat laporan perpustakaan')->name('laporan.cetak');
 
     Route::get('/uji-error', function () {
-    throw new RuntimeException('Uji error 250441100038');
-});
+        throw new RuntimeException('Uji error 250441100038');
+    });
 });
 
 require __DIR__.'/auth.php';
