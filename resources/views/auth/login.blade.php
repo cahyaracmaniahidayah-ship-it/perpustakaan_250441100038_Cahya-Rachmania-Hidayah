@@ -1,4 +1,11 @@
 <x-guest-layout>
+    <!-- Judul Halaman Login untuk Soal 5 -->
+    <div class="mb-4 text-center">
+        <h1 class="text-lg font-semibold text-gray-800">
+            Login Perpustakaan - 250441100038
+        </h1>
+    </div>
+
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
